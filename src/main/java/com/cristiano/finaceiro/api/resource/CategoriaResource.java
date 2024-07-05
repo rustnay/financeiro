@@ -1,9 +1,9 @@
 package com.cristiano.finaceiro.api.resource;
 
-import com.cristiano.finaceiro.api.doc.FormaPagamentoDoc;
-import com.cristiano.finaceiro.api.request.FormaPagamentoRequest;
+import com.cristiano.finaceiro.api.doc.CategoriaDoc;
+import com.cristiano.finaceiro.api.request.CategoriaRequest;
 import com.cristiano.finaceiro.api.response.HttpResponse;
-import com.cristiano.finaceiro.service.FormaPagamentoService;
+import com.cristiano.finaceiro.service.CategoriaService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,17 +13,17 @@ import java.net.URI;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.cristiano.finaceiro.mapper.FormaPagamentoMapper.fromRequestToDTO;
+import static com.cristiano.finaceiro.mapper.CategoriaMapper.fromRequestToDTO;
 import static java.time.LocalDateTime.now;
 import static java.util.Map.of;
 import static org.springframework.http.HttpStatus.*;
 
-@RequestMapping("/formas-pagamentos")
+@RequestMapping("/categorias")
 @RestController
 @RequiredArgsConstructor
-public class FormaPagamentoResource implements FormaPagamentoDoc {
+public class CategoriaResource implements CategoriaDoc {
 
-    private final FormaPagamentoService service;
+    private final CategoriaService service;
 
     @GetMapping("/{id}")
     @Override
@@ -32,8 +32,8 @@ public class FormaPagamentoResource implements FormaPagamentoDoc {
         return ResponseEntity.ok(
                 HttpResponse.builder()
                         .timeStamp(now().toString())
-                        .data(of("formaPagamento", service.findById(id)))
-                        .message("Forma de pagamento recuperada")
+                        .data(of("categoria", service.findById(id)))
+                        .message("Categoria recuperada")
                         .status(OK)
                         .statusCode(OK.value())
                         .build());
@@ -47,7 +47,7 @@ public class FormaPagamentoResource implements FormaPagamentoDoc {
                 HttpResponse.builder()
                         .timeStamp(now().toString())
                         .data(of("page", service.listPageable(page.orElse(0), size.orElse(10))))
-                        .message("Formas de pagamentos recuperadas")
+                        .message("Categorias recuperadas")
                         .status(OK)
                         .statusCode(OK.value())
                         .build());
@@ -55,13 +55,13 @@ public class FormaPagamentoResource implements FormaPagamentoDoc {
 
     @PostMapping
     @Override
-    public ResponseEntity<HttpResponse> create(@RequestBody @Valid FormaPagamentoRequest request) {
+    public ResponseEntity<HttpResponse> create(@RequestBody @Valid CategoriaRequest request) {
         return ResponseEntity.created(URI.create(""))
                 .body(
                         HttpResponse.builder()
                                 .timeStamp(now().toString())
-                                .data(of("formaPagamento", service.create(fromRequestToDTO(request))))
-                                .message("Forma de pagamento criada com sucesso")
+                                .data(of("categoria", service.create(fromRequestToDTO(request))))
+                                .message("Categoria criada com sucesso")
                                 .status(CREATED)
                                 .statusCode(CREATED.value())
                                 .build());
@@ -69,12 +69,12 @@ public class FormaPagamentoResource implements FormaPagamentoDoc {
 
     @PutMapping
     @Override
-    public ResponseEntity<HttpResponse> update(@RequestBody @Valid FormaPagamentoRequest request) {
+    public ResponseEntity<HttpResponse> update(@RequestBody @Valid CategoriaRequest request) {
         return ResponseEntity.ok(
                 HttpResponse.builder()
                         .timeStamp(now().toString())
-                        .data(of("formaPagamento", service.update(fromRequestToDTO(request))))
-                        .message("Customer updated")
+                        .data(of("categoria", service.update(fromRequestToDTO(request))))
+                        .message("Categoria atualizada")
                         .status(OK)
                         .statusCode(OK.value())
                         .build());
@@ -87,20 +87,9 @@ public class FormaPagamentoResource implements FormaPagamentoDoc {
         return ResponseEntity.ok().body(
                 HttpResponse.builder()
                         .timeStamp(now().toString())
-                        .message("Forma de pagamento excluída com sucesso")
+                        .message("Categoria excluída com sucesso")
                         .status(NO_CONTENT)
                         .statusCode(NO_CONTENT.value())
                         .build());
     }
-
-    /*@RequestMapping("/error")
-    public ResponseEntity<HttpResponse> handleError(HttpServletRequest request) {
-        return ResponseEntity.badRequest().body(
-                HttpResponse.builder()
-                        .timeStamp(now().toString())
-                        .reason("There is no mapping for a " + request.getMethod() + " request for this path on the server")
-                        .status(BAD_REQUEST)
-                        .statusCode(BAD_REQUEST.value())
-                        .build());
-    }*/
 }

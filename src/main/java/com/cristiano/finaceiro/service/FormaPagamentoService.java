@@ -10,6 +10,6 @@ public interface FormaPagamentoService {
     FormaPagamentoDTO findById(UUID id);
     List<FormaPagamentoDTO> listPageable(Integer page, Integer size);
     FormaPagamentoDTO create(FormaPagamentoDTO formaPagamento);
-
     FormaPagamentoDTO update(FormaPagamentoDTO formaPagamentoDTO);
+    void delete(UUID id);
 }

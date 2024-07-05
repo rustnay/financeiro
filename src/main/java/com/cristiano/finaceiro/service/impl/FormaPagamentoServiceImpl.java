@@ -21,8 +21,7 @@ import static java.lang.String.format;
 @Service
 public class FormaPagamentoServiceImpl implements FormaPagamentoService {
 
-
-    public static final String MSG_NAO_ENCONTRADA = "Não foi encontrada forma de pagamento com id: %s para atualizar.";
+    private static final String MSG_NAO_ENCONTRADA = "Não foi encontrada forma de pagamento com id: %s para atualizar.";
     private final FormaPagamentoRepository repository;
 
 
@@ -47,11 +46,21 @@ public class FormaPagamentoServiceImpl implements FormaPagamentoService {
 
     @Override
     public FormaPagamentoDTO update(FormaPagamentoDTO formaPagamento) {
-        FormaPagamento formaPagamentoRecuperada = repository.findById(formaPagamento.getId())
-                .orElseThrow(() -> new NotFoundException(format(MSG_NAO_ENCONTRADA, formaPagamento.getId())));
+        FormaPagamento formaPagamentoRecuperada = getFormaPagamento(formaPagamento.getId());
 
         formaPagamentoRecuperada.setNome(formaPagamento.getNome());
         formaPagamentoRecuperada.setDescricao(formaPagamento.getDescricao());
         return fromEntityToDTO(repository.save(formaPagamentoRecuperada));
+    }
+
+    @Override
+    public void delete(UUID id) {
+        getFormaPagamento(id);
+        repository.deleteById(id);
+    }
+
+    private FormaPagamento getFormaPagamento(UUID id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new NotFoundException(format(MSG_NAO_ENCONTRADA, id)));
     }
 }
